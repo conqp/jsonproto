@@ -38,4 +38,4 @@ class Client:
                   big_endian=big_endian)
 
         with self._socket.makefile('rb') as file:
-            return read(file)['payload']
+            return read(file).get('payload')

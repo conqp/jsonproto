@@ -25,9 +25,15 @@ def spawn(host: IPOrHostname, port: int, handler: Handler, *,
 
     with socket() as sock:
         sock.bind((str(host), port))
+        sock.listen()
 
         while True:
-            conn, address = sock.accept()
+            try:
+                conn, address = sock.accept()
+            except KeyboardInterrupt:
+                LOGGER.info('User abort.')
+                break
+
             LOGGER.info('Incoming connection from %s.', address)
 
             with conn.makefile('rb') as file:

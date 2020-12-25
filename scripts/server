@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 """A JSON proto server."""
 
-from subprocess import CalledProcessError, run
+from subprocess import PIPE, CalledProcessError, run
 
 from jsonproto import JSON, spawn
 
@@ -9,13 +9,8 @@ from jsonproto import JSON, spawn
 def handler(json: JSON) -> JSON:
     """A JSON message handler."""
 
-    if not (command := json.get('command')):
-        return False
-
-    args = json.get('args', [])
-
     try:
-        result = run([command, *args], check=True, text=True)
+        result = run(json, stdout=PIPE, stderr=PIPE, check=True, text=True)
     except CalledProcessError as error:
         return {
             'state': False,
@@ -35,7 +30,7 @@ def handler(json: JSON) -> JSON:
 def main():
     """Runs the server."""
 
-    spawn('127.0.0.1', 5000, handler)
+    spawn('127.0.0.1', 9000, handler)
 
 
 if __name__ == '__main__':

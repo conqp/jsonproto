@@ -2,7 +2,7 @@
 """A JSON protocol client."""
 
 from json import dumps
-from sys import argv
+from typing import List
 
 from jsonproto import Client
 
@@ -10,18 +10,18 @@ from jsonproto import Client
 class RPCClient(Client):
     """A RPC client implemetation."""
 
-    def run(self) -> None:
+    def run(self, args: List[str]) -> None:
         """Runs a command."""
-        response = self.communicate(argv)
+        response = self.communicate(args)
         print(dumps(response, indent=2))
 
 
-def main():
+def main(args: List[str]):
     """Runs the client."""
 
-    with RPCClient('127.0.0.1', 5000) as client:
-        client.run()
+    with RPCClient('127.0.0.1', 9000) as client:
+        client.run(args)
 
 
 if __name__ == '__main__':
-    main()
+    main(['ls', '-la'])

@@ -1,0 +1,42 @@
+#! /usr/bin/env python3
+"""A JSON proto server."""
+
+from subprocess import CalledProcessError, run
+
+from jsonproto import JSON, spawn
+
+
+def handler(json: JSON) -> JSON:
+    """A JSON message handler."""
+
+    if not (command := json.get('command')):
+        return False
+
+    args = json.get('args', [])
+
+    try:
+        result = run([command, *args], check=True, text=True)
+    except CalledProcessError as error:
+        return {
+            'state': False,
+            'stdout': error.stdout,
+            'stderr': error.stderr,
+            'returncode': error.returncode
+        }
+
+    return {
+        'state': True,
+        'stdout': result.stdout,
+        'stderr': result.stderr,
+        'returncode': result.returncode
+    }
+
+
+def main():
+    """Runs the server."""
+
+    spawn('127.0.0.1', 5000, handler)
+
+
+if __name__ == '__main__':
+    main()

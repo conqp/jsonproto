@@ -1,0 +1,27 @@
+#! /usr/bin/env python3
+"""A JSON protocol client."""
+
+from json import dumps
+from sys import argv
+
+from jsonproto import Client
+
+
+class RPCClient(Client):
+    """A RPC client implemetation."""
+
+    def run(self) -> None:
+        """Runs a command."""
+        response = self.communicate(argv)
+        print(dumps(response, indent=2))
+
+
+def main():
+    """Runs the client."""
+
+    with RPCClient('127.0.0.1', 5000) as client:
+        client.run()
+
+
+if __name__ == '__main__':
+    main()

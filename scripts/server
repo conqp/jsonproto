@@ -1,9 +1,22 @@
 #! /usr/bin/env python3
 """A JSON proto server."""
 
+from argparse import ArgumentParser, Namespace
+from logging import DEBUG, basicConfig
 from subprocess import PIPE, CalledProcessError, run
 
 from jsonproto import JSON, spawn
+
+
+def get_args() -> Namespace:
+    """Parses the command line arguments."""
+
+    parser = ArgumentParser(description='JSON protocol testing server')
+    parser.add_argument('-H', '--host', metavar='host', default='127.0.0.1',
+                        help='the hostname or address to listen on')
+    parser.add_argument('-p', '--port', type=int, metavar='port',
+                        default=9000, help='the port to listen on')
+    return parser.parse_args()
 
 
 def handler(json: JSON) -> JSON:
@@ -30,7 +43,9 @@ def handler(json: JSON) -> JSON:
 def main():
     """Runs the server."""
 
-    spawn('127.0.0.1', 9000, handler)
+    args = get_args()
+    basicConfig(level=DEBUG)
+    spawn(args.host, args.port, handler)
 
 
 if __name__ == '__main__':

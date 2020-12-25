@@ -60,3 +60,5 @@ def spawn(host: IPOrHostname, port: int, handler: Handler, *,
             if json.get('jsonproto') in {MSG_DESPAWN, MSG_SERVER_ERROR}:
                 LOGGER.info('Despawning.')
                 break
+
+        sock.close()

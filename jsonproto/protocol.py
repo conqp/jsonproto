@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 from json import dumps, loads
+from logging import getLogger
 from typing import IO, Iterator, NamedTuple
 
 from jsonproto.typing import JSON
@@ -18,6 +19,7 @@ __all__ = [
 ]
 
 
+LOGGER = getLogger('JSON protocol')
 MSG_DESPAWN = 'DESPAWN'
 MSG_SERVER_ERROR = 'SERVER_ERROR'
 
@@ -118,6 +120,7 @@ def read(file: IO) -> JSON:
 
     while True:
         packets.append(packet := Packet.read(file))
+        LOGGER.debug('Read packet: %s', packet)
 
         if not packet.header.followup:
             break

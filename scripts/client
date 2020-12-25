@@ -1,10 +1,24 @@
 #! /usr/bin/env python3
 """A JSON protocol client."""
 
+from argparse import ArgumentParser, Namespace
 from json import dumps
+from logging import DEBUG, basicConfig
 from typing import List
 
 from jsonproto import Client
+
+
+def get_args() -> Namespace:
+    """Parses the command line arguments."""
+
+    parser = ArgumentParser(description='JSON protocol testing server')
+    parser.add_argument('command', nargs='+', help='the command to run')
+    parser.add_argument('-H', '--host', metavar='host', default='127.0.0.1',
+                        help='the hostname or address to listen on')
+    parser.add_argument('-p', '--port', type=int, metavar='port',
+                        default=9000, help='the port to listen on')
+    return parser.parse_args()
 
 
 class RPCClient(Client):
@@ -12,15 +26,18 @@ class RPCClient(Client):
 
     def run(self, args: List[str]) -> None:
         """Runs a command."""
-        response = self.communicate(args)
+        response = self.communicate(args, chunk_size=8, big_endian=True)
         print(dumps(response, indent=2))
 
 
 def main(args: List[str]):
     """Runs the client."""
 
-    with RPCClient('127.0.0.1', 9000) as client:
-        client.run(args)
+    args = get_args()
+    basicConfig(level=DEBUG)
+
+    with RPCClient(args.host, args.port) as client:
+        client.run(args.command)
 
 
 if __name__ == '__main__':

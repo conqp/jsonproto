@@ -45,7 +45,7 @@ def main():
 
     args = get_args()
     basicConfig(level=DEBUG)
-    spawn(args.host, args.port, handler)
+    spawn(args.host, args.port, handler, chunk_size=16)
 
 
 if __name__ == '__main__':

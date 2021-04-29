@@ -147,3 +147,4 @@ def write(json: JSON, file: IO, *, chunk_size: int = 4096,
         header = Header(index < count - 1, big_endian)
         packet = Packet(header, chunk)
         packet.write(file)
+        LOGGER.debug('Sent packet: %s', packet)

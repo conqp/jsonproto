@@ -30,7 +30,7 @@ class RPCClient(Client):
         print(dumps(response, indent=2))
 
 
-def main(args: List[str]):
+def main():
     """Runs the client."""
 
     args = get_args()
@@ -41,4 +41,4 @@ def main(args: List[str]):
 
 
 if __name__ == '__main__':
-    main(['ls', '-la'])
+    main()

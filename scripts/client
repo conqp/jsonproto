@@ -2,9 +2,8 @@
 """A JSON protocol client."""
 
 from argparse import ArgumentParser, Namespace
-from json import dumps
 from logging import DEBUG, INFO, basicConfig
-from sys import exit, stderr
+from sys import exit, stderr    # pylint: disable=W0622
 from typing import List
 
 from jsonproto import Client

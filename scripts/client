@@ -3,7 +3,7 @@
 
 from argparse import ArgumentParser, Namespace
 from json import dumps
-from logging import DEBUG, basicConfig
+from logging import DEBUG, INFO, basicConfig
 from sys import exit, stderr
 from typing import List
 
@@ -19,6 +19,8 @@ def get_args() -> Namespace:
                         help='the hostname or address to listen on')
     parser.add_argument('-p', '--port', type=int, metavar='port',
                         default=9000, help='the port to listen on')
+    parser.add_argument('-d', '--debug', action='store_true',
+                        help='enable debug logging')
     return parser.parse_args()
 
 
@@ -41,7 +43,7 @@ def main():
     """Runs the client."""
 
     args = get_args()
-    basicConfig(level=DEBUG)
+    basicConfig(level=DEBUG if args.debug else INFO)
 
     with RPCClient(args.host, args.port) as client:
         returncode = client.run(args.command)
